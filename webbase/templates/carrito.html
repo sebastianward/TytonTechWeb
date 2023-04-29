@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="carrito" class="container mx-auto my-8">
+
+  <h2 class="text-2xl font-bold mb-4">Mi carrito</h2>
+
+  <table class="w-full">
+    <thead>
+      <tr>
+        <th class="px-4 py-2"></th>
+        <th class="px-4 py-2">Producto</th>
+        <th class="px-4 py-2">Descripción</th>
+        <th class="px-4 py-2">Precio</th>
+        <th class="px-4 py-2">Cantidad</th>
+        <th class="px-4 py-2">Subtotal</th>
+        <th class="px-4 py-2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in productos %}
+      <tr>
+        <td class="border px-4 py-2"><input type="checkbox" class="rounded-full product-checkbox" name="selected_items" value="{{ item.id }}"></td>
+        <td class="border px-4 py-2">{{ item.nombre }}</td>
+        <td class="border px-4 py-2">{{ item.descripcion }}</td>
+        <td class="border px-4 py-2">${{ item.precio }}</td>
+        <td class="border px-4 py-2">
+          <div class="flex space-x-4">
+            <form action="{% url 'webbase:update_cart' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ item.id }}">
+              <input type="hidden" name="action" value="remove">
+              <button type="submit" class="bg-gray-200 text-gray-700 py-1 px-4 rounded-lg">-</button>
+            </form>
+            <span class="py-1 px-4 rounded-lg border">{{ item.cantidad }}</span>
+            <form action="{% url 'webbase:update_cart' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ item.id }}">
+              <input type="hidden" name="action" value="add">
+              <button type="submit" class="bg-gray-200 text-gray-700 py-1 px-4 rounded-lg">+</button>
+            </form>
+            <form action="{% url 'webbase:update_cart' %}"  hx-confirm="estas seguro/a de eliminar este producto de tu carrito?" method="POST">
+              {% csrf_token %}
+              <input type="hidden" name="product_id" value="{{ item.id }}">
+              <input type="hidden" name="action" value="delete">
+              <button type="submit" class="bg-red-500 text-white py-1 px-4 rounded-lg">Eliminar</button>
+          </form>
+          </div>
+          
+        </td>
+        <td class="border px-4 py-2">${{ item.subtotal }}</td>
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot class="pb-4">
+      <tr id="total-row" class="pb-4 mb-4">
+        <td colspan="4" class="border px-4  py-2 font-bold text-right"></td>
+        <td class="border px-4 py-2 font-bold text-right">Total:</td>
+        <td id="total" class="border px-4 py-2 font-bold">${{ total }}</td>
+      </tr>
+      <tr>
+        <td class="text-right" colspan="6"><button type="submit" class="mt-4 bg-red-500 text-white py-2 px-8 rounded-lg text-xl">Comprar Ya!</button></td>
+      </tr>
+    </tfoot>
+  </table>
+
+</div>
+<script>
+  var checkboxes = document.querySelectorAll('input[name=selected_items]');
+
+  function printSubtotal() {
+    var total = 0;
+    checkboxes.forEach(function(checkbox) {
+      if (checkbox.checked) {
+        var row = checkbox.parentNode.parentNode;
+        var subtotal = row.querySelector('td:last-child').innerText.slice(1);
+        console.log(subtotal);
+        total += parseFloat(subtotal);
+        document.querySelector('#total').textContent = '$' + total;
+      }
+    });
+    console.log('Total:', total);
+  }
+
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      printSubtotal();
+    });
+  });
+
+  // Remove event listener from + and - buttons to prevent clearing checkboxes
+  var buttons = document.querySelectorAll('.product-checkbox + form button');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation(); // Add this line to prevent event propagation
+    });
+  });
+</script>
+
+
+
+
+{% endblock %}

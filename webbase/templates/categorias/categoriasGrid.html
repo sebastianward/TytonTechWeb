@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container w-screen mx-auto py-6">
+    <div class="flex flex-wrap -mx-4">
+      <div class="w-full grid-cols-4 md:w-1/2 lg:w-1/3 px-4 mb-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <a href="#">
+            <img class="object-cover" src="https://picsum.photos/id/1/400/400" alt="Product Image">
+          </a>
+          <div class="py-4 px-6">
+            <h2 class="text-lg font-bold mb-2"><a href="#">Product Name</a></h2>
+            <div class="font-bold text-xl mb-2">$20.00</div>
+            <p class="text-gray-700 text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <div class="bg-gray-200 px-6 py-4">
+            <button class="text-xs font-semibold rounded-full px-4 py-2 leading-none border border-gray-700 hover:border-transparent hover:text-white hover:bg-gray-700">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 lg:w-1/3 px-4 mb-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <a href="#">
+            <img class="h-48 w-full object-cover" src="https://picsum.photos/id/2/400/400" alt="Product Image">
+          </a>
+          <div class="py-4 px-6">
+            <h2 class="text-lg font-bold mb-2"><a href="#">Product Name</a></h2>
+            <div class="font-bold text-xl mb-2">$15.00</div>
+            <p class="text-gray-700 text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          </div>
+          <div class="bg-gray-200 px-6 py-4">
+            <button class="text-xs font-semibold rounded-full px-4 py-2 leading-none border border-gray-700 hover:border-transparent hover:text-white hover:bg-gray-700">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %} 

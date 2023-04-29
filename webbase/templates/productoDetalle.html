@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mx-auto p-6">
+    <div class="max-w-md mx-auto bg-white rounded-lg overflow-hidden md:max-w-lg">
+      <img class="w-full object-contain h-64" src="{{ producto.img_url }}" alt="{{ producto.nombre }}">
+      <div class="p-6">
+        <h1 class="text-xl font-medium">{{ producto.nombre }}</h1>
+        <p class="text-gray-600">{{ producto.descripcion }}</p>
+        <p class="text-gray-600">Category: {{ producto.categoria }}</p>
+        <p class="text-gray-600">Supplier: {{ producto.proveedor }}</p>
+        <p class="text-gray-600">Price: ${{ producto.precio }}</p>
+        <p class="text-gray-600">In stock: {{ producto.en_stock }}</p>
+        <div class="mt-4">
+          <form method="POST" action="{% url 'webbase:AgregarAlCarro' producto.id 1 %}">
+            {% csrf_token %}
+            <a onclick="addToCart({{producto.id}})" 
+                    hx-post="{% url 'webbase:AgregarAlCarro' producto.id 1 %}"
+                    hx-ext="json"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    hx-AfterSwap="updateCartCount(data.cart_count);"
+                    > Add to Cart</a>
+          </form>
+          <form method="POST" action="">
+            {% csrf_token %}
+            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2">
+              Buy Now
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize an empty array to store the product IDs in the cart
+    let cartItems = [];
+    {% for p in prods_list %}
+      cartItems.push({{ p.id_producto }});
+    {% endfor %}
+    console.log(cartItems);
+
+    function addToCart(productId) {
+        // Check if the product is already in the cart
+        if (cartItems.includes(productId)) {
+        console.log("Product is already in cart");
+        } else {
+        console.log("Adding product to cart");
+        cartItems.push(productId);
+        updateCartCount();
+        }
+    }
+
+    function updateCartCount() {
+        const cartCount = document.querySelector('#cart-count');
+        cartCount.textContent = Number(cartCount.textContent) + 1;
+    }
+  </script>
+
+{% endblock %}

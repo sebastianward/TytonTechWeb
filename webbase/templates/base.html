@@ -1,0 +1,47 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html class="min-h-screen flex flex-col" lang="en">
+	<head>
+    <title>TytonSells</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+	</head>
+    <script src="https://unpkg.com/htmx.org@1.8.5" integrity="sha384-7aHh9lqPYGYZ7sTHvzP1t3BAfLhYSTy9ArHdP3Xsr9/3TlGurYgcPBoFmXX2TX/w" crossorigin="anonymous"></script>
+	<body class="flex-grow min-h-screen">
+		{% include 'header.html' %}
+		{% block content %}
+
+        {% include 'partials/_messages.html' %}
+		{% endblock %}
+		{% include 'footer.html' %}	
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+	</body>
+</html>
+<script>
+</script>
+<style>
+  html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+  }
+  .max-h-screen-lg {
+      min-height: 100%;
+      position: relative;
+  }
+  .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+  }
+</style>

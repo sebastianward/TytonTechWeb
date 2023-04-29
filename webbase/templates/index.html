@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="{{ request.user.id }}" class="hidden"></div>   
+
+<main class="bg-gray-200  p-6 mx-auto" >
+    <div class="flex flex-wrap justify-center gap-6 mb-4">
+        {% for p in prods %}
+        <div class="flex-1 w-1/5 md:w-1/2 lg:w-1/4 xl:w-1/5 bg-white rounded-lg shadow-lg overflow-hidden">
+            <a href="{% url 'webbase:productoDetalle' p.id %}">
+              <img  class="w-full h-32 object-cover" src="https://picsum.photos/200/200" alt="Product image">
+            </a>
+            <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="px-4 py-4">
+                <h2 class="font-bold text-xl mb-2">{{ p.nombre }}</h2>
+                <p class="text-gray-700 text-base mb-4">{{ p.descripcion }}</p>
+                <div class="flex items-center justify-between">
+                <p class="text-gray-800 font-bold text-xl">${{ p.precio }}</p>
+                <a onclick="addToCart({{p.id}})" 
+                    hx-post="{% url 'webbase:AgregarAlCarro' p.id 1 %}"
+                    hx-ext="json"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    hx-AfterSwap="updateCartCount(data.cart_count);"
+                    > Agregar al carro</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="flex flex-wrap justify-center gap-6 mb-4">
+        {% for p in prods %}
+        <div class="flex-1 w-1/5 md:w-1/2 lg:w-1/4 xl:w-1/5 bg-white rounded-lg shadow-lg overflow-hidden">
+            <img  class="w-full h-32 object-cover" src="https://picsum.photos/200/200" alt="Product image">
+            <div hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="px-4 py-4">
+                <h2 class="font-bold text-xl mb-2">{{ p.nombre }}</h2>
+                <p class="text-gray-700 text-base mb-4">{{ p.descripcion }}</p>
+                <div class="flex items-center justify-between">
+                <p class="text-gray-800 font-bold text-xl">${{ p.precio }}</p>
+                <a id="p.id" hx-post="{% url 'webbase:AgregarAlCarro' p.id 1 %}"
+                    hx-ext="json"                    
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    > Agregar al carro</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+
+<script>
+    // Initialize an empty array to store the product IDs in the cart
+    let cartItems = [];
+    {% for p in prods_list %}
+    cartItems.push({{ p.id_producto }});
+    {% endfor %}
+    console.log(cartItems);
+  
+    function addToCart(productId) {
+      // Check if the product is already in the cart
+      if (cartItems.includes(productId)) {
+        console.log("Product is already in cart");
+      } else {
+        console.log("Adding product to cart");
+        cartItems.push(productId);
+        updateCartCount();
+      }
+    }
+  
+    function updateCartCount() {
+      const cartCount = document.querySelector('#cart-count');
+      cartCount.textContent = Number(cartCount.textContent) + 1;
+    }
+  </script>
+{% endblock %}
